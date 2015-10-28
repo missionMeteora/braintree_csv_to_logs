@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"io"
 	"os"
 )
@@ -20,50 +19,29 @@ import (
 //		- After processing - if err exists, write to Stderr
 func main() {
 	var (
-		inputLoc  string
-		outputLoc string
-		tmpLoc    string
-
-		f      *os.File
-		output io.Writer
-
-		err error
+		err       error
+		f         *os.File
+		output    io.Writer
+		i, o, tmp string = getFlagLocs()
 	)
 
-	flag.StringVar(&inputLoc, "i", "", "Location of input file to process (Stdin by default)")
-	flag.StringVar(&outputLoc, "o", "", "Location of output file (Stdout by default)")
-	flag.Parse()
-
-	if len(outputLoc) == 0 {
+	if o == "" {
 		output = os.Stdout
 	} else {
-		tmpLoc = outputLoc + ".tmp"
-		if f, err = os.Create(tmpLoc); err != nil {
+		if f, err = os.Create(tmp); err != nil {
 			stderr("Error when trying to ", err)
 			return
 		}
-		defer f.Close()
+
 		output = f
 	}
 
-	switch len(inputLoc) {
-	case 0:
+	if i == "" {
 		err = process(os.Stdin, output)
-	default:
-		err = processLoc(inputLoc, output)
+	} else {
+		err = processLoc(i, output)
 	}
 
-	if f != nil {
-		f.Close()
-
-		if err == nil {
-			os.Rename(tmpLoc, outputLoc)
-		} else {
-			os.Remove(tmpLoc)
-		}
-	}
-
-	if err != nil {
-		os.Stderr.WriteString(err.Error())
-	}
+	closeFile(f, err, o, tmp)
+	reportErrors(err)
 }

@@ -86,6 +86,8 @@ func (b *breakdown) Set(k string, ts time.Time, str string) {
 type breakdownMap map[string]map[string][]string
 
 func (b breakdownMap) process(t *tar.Writer, ttl string) error {
+	now := time.Now()
+
 	for yk, y := range b {
 		for mk, mn := range y {
 			buf := bytes.NewBuffer(nil)
@@ -96,9 +98,10 @@ func (b breakdownMap) process(t *tar.Writer, ttl string) error {
 			}
 
 			if err := t.WriteHeader(&tar.Header{
-				Name: ttl + "/" + yk + "/" + mk + ".log",
-				Mode: 0600,
-				Size: int64(buf.Len()),
+				Name:    ttl + "/" + yk + "/" + mk + ".log",
+				Mode:    0600,
+				Size:    int64(buf.Len()),
+				ModTime: now,
 			}); err != nil {
 				return err
 			}
