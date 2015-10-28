@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// Format provided by Braintree, used to parse to time.Time
 const tsFmt = `01/02/2006 15:04:05 MST`
 
 func newLogLine(b []byte) (l *LogLine, err error) {
@@ -43,12 +44,13 @@ type LogLine struct {
 	TransactionStatus string `json:"txnStatus"`
 
 	AuthorizationCode string    `json:"authCode,omitempty"`
-	CreatedTimestamp  time.Time `json:"createdTs"`
 	SettlementDate    string    `json:"settlementDate,omitempty"`
+	CreatedTimestamp  time.Time `json:"createdTs"`
 
 	Amount float64 `json:"amount"`
 }
 
+//	Returns the concatination result of CreatedTimestamp, " ", and CreatedTimezone
 func getTimestamp(cts, ctz []byte) string {
 	v := make([]byte, 0, len(cts)+len(ctz)+1)
 	v = append(v, cts...)
