@@ -2,7 +2,6 @@ package main
 
 import (
 	"io"
-	"os"
 )
 
 //	Checks for input and output flags:
@@ -20,28 +19,26 @@ import (
 func main() {
 	var (
 		err       error
-		f         *os.File
-		output    io.Writer
+		input     io.ReadCloser
+		output    io.WriteCloser
 		i, o, tmp string = getFlagLocs()
 	)
 
-	if o == "" {
-		output = os.Stdout
-	} else {
-		if f, err = os.Create(tmp); err != nil {
-			stderr("Error when trying to ", err)
-			return
-		}
-
-		output = f
+	if input, err = getInput(i); err != nil {
+		stderr("", err)
 	}
 
-	if i == "" {
-		err = process(os.Stdin, output)
-	} else {
-		err = processLoc(i, output)
+	if output, err = getOutput(o, tmp); err != nil {
+		stderr("", err)
 	}
 
-	closeFile(f, err, o, tmp)
+	if err == nil {
+		err = process(input, output)
+	}
+
+	input.Close()
+	output.Close()
+
+	handleOutput(err, o, tmp)
 	reportErrors(err)
 }

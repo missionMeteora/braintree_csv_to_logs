@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"io"
 	"os"
 	"strconv"
 )
@@ -21,15 +22,39 @@ func getFlagLocs() (i, o, t string) {
 	return i, o, i + ".tmp"
 }
 
-func closeFile(f *os.File, err error, o, tmp string) {
-	if f != nil {
-		f.Close()
+func getInput(i string) (input io.ReadCloser, err error) {
+	if i == "" {
+		return os.Stdin, nil
+	}
 
-		if err == nil {
-			os.Rename(tmp, o)
-		} else {
-			os.Remove(tmp)
-		}
+	if input, err = os.Open(i); err != nil {
+		return nil, err
+	}
+
+	return input, nil
+}
+
+func getOutput(o, tmp string) (output io.WriteCloser, err error) {
+	if o == "" {
+		return os.Stdout, nil
+	}
+
+	if output, err = os.Create(tmp); err != nil {
+		return nil, err
+	}
+
+	return output, nil
+}
+
+func handleOutput(err error, o, tmp string) {
+	if o == "" {
+		return
+	}
+
+	if err == nil {
+		os.Rename(tmp, o)
+	} else {
+		os.Remove(tmp)
 	}
 }
 
