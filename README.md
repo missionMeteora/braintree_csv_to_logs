@@ -2,6 +2,8 @@
 
 braintree_csv_to_logs is a library which will process a braintree report in CSV format. It will output the report as a tar containing logs split up by year and month. 
 
+*Note: Pre-compiled binaries for MacOSX (64-bit) and Linux (64-bit) are available in the "bin" directory. No dependencies are needed!*
+
 ## Usage - Command line
 ``` bash
 # Input file and output file
