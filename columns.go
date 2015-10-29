@@ -1,7 +1,7 @@
 package main
 
-//	List of all the current columns for the Braintree CSV report.
-//	Currently there are 107 columns, we can maintain uint8 until 255 entries.
+// List of all the current columns for the Braintree CSV report.
+// Currently there are 107 columns, we can maintain uint8 until 255 entries.
 const (
 	col_transactionID uint8 = iota
 	col_subscriptionID

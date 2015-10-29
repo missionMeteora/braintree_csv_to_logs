@@ -82,7 +82,7 @@ func (b *breakdown) Set(k string, ts time.Time, str string) {
 	bdm[yv][mv] = append(bdm[yv][mv], str)
 }
 
-//				   Year		  Month	   Item
+// map[year]map[month][]entry
 type breakdownMap map[string]map[string][]string
 
 func (b breakdownMap) process(t *tar.Writer, ttl string) error {

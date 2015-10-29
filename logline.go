@@ -50,7 +50,7 @@ type LogLine struct {
 	Amount float64 `json:"amount"`
 }
 
-//	Returns the concatination result of CreatedTimestamp, " ", and CreatedTimezone
+// Returns the concatination result of CreatedTimestamp, " ", and CreatedTimezone
 func getTimestamp(cts, ctz []byte) string {
 	v := make([]byte, 0, len(cts)+len(ctz)+1)
 	v = append(v, cts...)
