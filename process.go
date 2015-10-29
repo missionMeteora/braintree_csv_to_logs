@@ -4,20 +4,8 @@ import (
 	"bufio"
 	"encoding/json"
 	"io"
-	"os"
 	"strconv"
 )
-
-func processLoc(loc string, w io.Writer) (err error) {
-	var f *os.File
-	if f, err = os.Open(loc); err != nil {
-		stderr("Error when trying to ", err)
-		return
-	}
-	defer f.Close()
-
-	return process(f, w)
-}
 
 func process(r io.Reader, w io.Writer) (err error) {
 	var (
